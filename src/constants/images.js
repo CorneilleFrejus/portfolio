@@ -7,7 +7,7 @@ import Project04 from '../assets/project04.jpg';
 import Background from '../assets/background.jpg';
 import Resume from '../assets/Kouassivi_Corneille_CV_EN.pdf';
 
-export default {
+const images = {
     John,
     Jane,
     Project01,
@@ -17,3 +17,5 @@ export default {
     Background,
     Resume
 };
+
+export default images;
