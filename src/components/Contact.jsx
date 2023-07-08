@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Images from '../constants/images';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const refForm = useRef();
 
-  const encode = (data) => {
-    return Object.keys(data)
-      .map(
-        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key])
+  const sendEmail = (e) => {
+    e.preventDefault()
+
+    emailjs
+      .sendForm(
+        'service_5ui49vo',
+        'template_g9xan8c',
+        refForm.current,
+        'LPYiSL_NEDu65uJmA'
+      ).then(
+        () => {
+          alert('Message successfully sent !')
+          window.location.reload(false)
+        },
+        () => {
+          alert('Failed to send the message, please try again')
+        }
       )
-      .join("&");
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch("/", {
-      method: "POST",
-      headers: { "Cntent-Type": "application/x-www-form-urlencoded" },
-      body: encode({ "form-name": "contact", name, email, message }),
-    })
-      .then(() => alert("Message sent!"))
-      .catch((error) => alert(error));
   }
 
   return (
@@ -50,9 +50,9 @@ const Contact = () => {
           </div>
         </div>
         <form
-          netlify
+          ref={refForm}
           name='contact'
-          onSubmit={handleSubmit}
+          onSubmit={sendEmail}
           className='lg:w-1/3 md:w-1/2 flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0'>
           <h2 className='text-white sm:text-4xl text-3xl mb-1 font-medium title-font'>
             Take A Coffee & Chat With Me
@@ -69,7 +69,7 @@ const Contact = () => {
               id='name'
               name='name'
               className='w-full bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
-              onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
           <div className='relative mb-4'>
@@ -81,7 +81,19 @@ const Contact = () => {
               id='email'
               name='email'
               className='w-full bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
-              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className='relative mb-4'>
+            <label htmlFor='email' className='leading-7 text-sm text-gray-400'>
+              Subject
+            </label>
+            <input
+              type='text'
+              id='subject'
+              name='subject'
+              className='w-full bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
+              required
             />
           </div>
           <div className='relative mb-4'>
@@ -92,7 +104,7 @@ const Contact = () => {
               id='message'
               name='message'
               className='w-full bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 h-32 text-base outline-none text-gray-100 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out'
-              onChange={(e) => setMessage(e.target.value)}
+              required
             />
           </div>
           <button
